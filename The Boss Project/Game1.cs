@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace The_Boss_Project
@@ -24,6 +26,10 @@ namespace The_Boss_Project
 
         //Font
         private SpriteFont _GameFont;
+
+        //For the music
+        private Song _Music;
+
 
         public Game1()
         {
@@ -59,11 +65,11 @@ namespace The_Boss_Project
                 int odds = _rng.Next(1, 3);
                 if (odds == 1)
                 {
-                    _fallingObjects.Add(new Candy(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Candy")));
+                    _fallingObjects.Add(new Candy(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Candy"), Content.Load<SoundEffect>("630502__jimbo555__soap-dispenser")));
                 }
                 else if (odds == 2)
                 {
-                    _fallingObjects.Add(new Axe(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Toothy Hammer")));
+                    _fallingObjects.Add(new Axe(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Toothy Hammer"), Content.Load<SoundEffect>("978__rhumphries__rbh-glass_break-02")));
                 }
             }
 
@@ -72,6 +78,11 @@ namespace The_Boss_Project
 
             //For the game font
             _GameFont = Content.Load<SpriteFont>("GameFont");
+
+            //For the song
+            //Songs and sounds are from https://freesound.org/browse/, I originally used them for Game Engine
+            _Music = Content.Load<Song>("650965__betabeats__beat-tune-abysses");
+            MediaPlayer.Play(_Music);
 
             // TODO: use this.Content to load your game content here
         }
@@ -125,17 +136,20 @@ namespace The_Boss_Project
                     int odds = _rng.Next(1, 3);
                     if (odds == 1)
                     {
-                        _fallingObjects.Add(new Candy(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Candy")));
+                        _fallingObjects.Add(new Candy(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Candy"), Content.Load<SoundEffect>("630502__jimbo555__soap-dispenser")));
                     }
                     else if (odds == 2)
                     {
-                        _fallingObjects.Add(new Axe(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Toothy Hammer")));
+                        _fallingObjects.Add(new Axe(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Toothy Hammer"), Content.Load<SoundEffect>("978__rhumphries__rbh-glass_break-02")));
                     }
                 }
             }
 
             //The player will update itself
             _player.Update();
+
+            //For music to loop
+            MediaPlayer.IsRepeating = true;
 
             base.Update(gameTime);
         }

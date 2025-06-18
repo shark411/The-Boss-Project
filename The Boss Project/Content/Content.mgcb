@@ -13,6 +13,24 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin 630502__jimbo555__soap-dispenser.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:630502__jimbo555__soap-dispenser.wav
+
+#begin 650965__betabeats__beat-tune-abysses.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:650965__betabeats__beat-tune-abysses.wav
+
+#begin 978__rhumphries__rbh-glass_break-02.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:978__rhumphries__rbh-glass_break-02.wav
+
 #begin Candy.png
 /importer:TextureImporter
 /processor:TextureProcessor

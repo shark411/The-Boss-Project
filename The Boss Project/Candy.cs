@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using Microsoft.Xna.Framework.Media;
 using System.Xml.Linq;
+using Microsoft.Xna.Framework.Audio;
 
 namespace The_Boss_Project
 {
@@ -13,15 +14,18 @@ namespace The_Boss_Project
     {
         private Color _candyColor;
         private bool _hasScored;
+        SoundEffect _candyCollectSFX;
 
-        public Candy(float x, float y, Texture2D candyTexture) : base (x, y, candyTexture)
+        public Candy(float x, float y, Texture2D candyTexture, SoundEffect candyCollectSFX) : base (x, y, candyTexture)
         {
             _candyColor = new Color(128 + _rng.Next(0, 129), 128 + _rng.Next(0, 129), 128 + _rng.Next(0, 129));
             _hasScored = false;
+            _candyCollectSFX = candyCollectSFX;
         }
         public override void Interacted()
         {
             _hasScored = true;
+            _candyCollectSFX.Play();
         }
         public bool HasScored()
         { 
