@@ -4,26 +4,33 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
 using Microsoft.Xna.Framework.Media;
+using System.Xml.Linq;
 
 namespace The_Boss_Project
 {
-    /*
+    
     internal class Candy : FallingObjects
     {
-        private Texture2D _candyTexture;
-        private float _candyX, _candyY;
-        private Random _rng;           
-        private Color _candyColor;          
-        private float _candyRotation;  
-        private float _candyRotationAmount;
+        
+        private Color _candyColor;
 
-        public Candy(float candyX, float candyY, Texture2D candyTexture) : base (float candyX, float candyY, Texture2D candyTexture)
+        public Candy(float x, float y, Texture2D candyTexture) : base (x, y, candyTexture)
         {
-            _candyTexture = candyTexture;
-            _candyX = candyX;
-            _candyY = candyY;
             _candyColor = new Color(128 + _rng.Next(0, 129), 128 + _rng.Next(0, 129), 128 + _rng.Next(0, 129));
         }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(_objectTexture,
+                     new Vector2(_objectX, _objectY),    //set the candy position
+                     null,                                   //ignore this
+                     _candyColor * 1,         //set colour and transparency
+                     _objectRotation,                          //set rotation
+                     new Vector2(_objectTexture.Width / 2, _objectTexture.Height / 2), //ignore this
+                     new Vector2(1, 1),    //set scale (same number 2x)
+                     SpriteEffects.None,                     //ignore this
+                     0f);
+        }
     }
-    */
+    
 }

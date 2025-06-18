@@ -7,8 +7,11 @@ using Microsoft.Xna.Framework.Media;
 
 namespace The_Boss_Project
 {
-    internal class Axe
+    internal class Axe : FallingObjects
     {
-
+        public Axe(float x, float y, Texture2D axeTexture) : base(x, y, axeTexture)
+        {
+            _objectSpeed = _rng.Next(2, 6);
+        }
     }
 }

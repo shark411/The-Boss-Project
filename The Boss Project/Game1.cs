@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace The_Boss_Project
 {
@@ -13,6 +14,7 @@ namespace The_Boss_Project
 
         private Random _rng;
         private List<FallingObjects> _fallingObjects;
+        private int _numFallingObjects;
 
         public Game1()
         {
@@ -24,9 +26,9 @@ namespace The_Boss_Project
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
-            base.Initialize();
             _rng = new Random();
+            _numFallingObjects = 1;
+            base.Initialize();
         }
 
         protected override void LoadContent()
@@ -34,9 +36,19 @@ namespace The_Boss_Project
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _fallingObjects = new List<FallingObjects>();
             
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < _numFallingObjects; i++)
             {
-                _fallingObjects.Add(new FallingObjects(i * 100, -200, Content.Load<Texture2D>("Candy")));
+                int odds = _rng.Next(1, 3);
+                if (odds == 1)
+                {
+                    _fallingObjects.Add(new Candy(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Candy")));
+                }
+                else if (odds == 2)
+                {
+                    _fallingObjects.Add(new Axe(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Toothy Hammer")));
+                }
+
+
             }
 
             // TODO: use this.Content to load your game content here
@@ -52,6 +64,34 @@ namespace The_Boss_Project
             foreach (FallingObjects o in _fallingObjects)
             {
                 o.Update();
+            }
+
+            for (int i = 0; i < _fallingObjects.Count; i++)
+            {
+                if (_fallingObjects[i].IsDestroyed() || _fallingObjects[i].GetY() > 500)
+                {
+                    _fallingObjects.RemoveAt(i);
+                }
+
+               
+            }
+
+            if (_fallingObjects.Count <= 0)
+            {
+                _numFallingObjects++;
+                for (int i = 0; i < _numFallingObjects; i++)
+                {
+                    int odds = _rng.Next(1, 3);
+                    if (odds == 1)
+                    {
+                        _fallingObjects.Add(new Candy(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Candy")));
+                    }
+                    else if (odds == 2)
+                    {
+                        _fallingObjects.Add(new Axe(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Toothy Hammer")));
+                    }
+                }
+
             }
 
             base.Update(gameTime);
