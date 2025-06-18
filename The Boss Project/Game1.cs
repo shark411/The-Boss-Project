@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -8,6 +10,10 @@ namespace The_Boss_Project
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        private Random _rng;
+        private FallingObjects _fallingObjects;
+        private int _numFallingObjects;
 
         public Game1()
         {
@@ -21,11 +27,15 @@ namespace The_Boss_Project
             // TODO: Add your initialization logic here
 
             base.Initialize();
+            _rng = new Random();
+            _numFallingObjects = _rng.Next(1, 5);
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+           // _fallingObjects = new List<FallingObjects>();
+           _fallingObjects = new FallingObjects (0f, 0f, Content.Load<Texture2D>("Candy"));
 
             // TODO: use this.Content to load your game content here
         }
@@ -37,6 +47,8 @@ namespace The_Boss_Project
 
             // TODO: Add your update logic here
 
+            _fallingObjects.Update();
+
             base.Update(gameTime);
         }
 
@@ -45,6 +57,10 @@ namespace The_Boss_Project
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+
+            _spriteBatch.Begin();
+            _fallingObjects.Draw(_spriteBatch);
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
