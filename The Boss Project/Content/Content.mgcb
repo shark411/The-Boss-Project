@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin 169317__scorpion67890__demonic-laugh.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:169317__scorpion67890__demonic-laugh.wav
+
 #begin 630502__jimbo555__soap-dispenser.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

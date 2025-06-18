@@ -29,6 +29,8 @@ namespace The_Boss_Project
 
         //For the music
         private Song _Music;
+        private SoundEffect _gameOverSFX;
+        private bool _isPlayingSound;
 
         //Bounding box
         private Texture2D _boundingBoxTexture;
@@ -58,6 +60,9 @@ namespace The_Boss_Project
             //Bounding box
             _boundingBoxTexture = new Texture2D(GraphicsDevice, 1, 1);
             _boundingBoxTexture.SetData(new Color[] { Color.White });
+
+            //For music
+            _isPlayingSound = false;
 
             base.Initialize();
         }
@@ -90,6 +95,7 @@ namespace The_Boss_Project
             //Songs and sounds are from https://freesound.org/browse/, I originally used them for Game Engine
             _Music = Content.Load<Song>("650965__betabeats__beat-tune-abysses");
             MediaPlayer.Play(_Music);
+            _gameOverSFX = Content.Load<SoundEffect>("169317__scorpion67890__demonic-laugh");
 
             // TODO: use this.Content to load your game content here
         }
@@ -163,6 +169,11 @@ namespace The_Boss_Project
             {
                 MediaPlayer.Stop(); //Stop the music when you die
                 _fallingObjects.Clear();
+                if (_isPlayingSound == false)
+                {
+                    _gameOverSFX.Play();
+                }
+                _isPlayingSound = true;
                 if (Keyboard.GetState().IsKeyDown(Keys.R))
                 {
                     Initialize();
@@ -173,31 +184,72 @@ namespace The_Boss_Project
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
-            _spriteBatch.Begin();
-
-            //Each falling object draws itself!
-            foreach (FallingObjects o in _fallingObjects)
+            if (_playerLives > 0)
             {
-                o.Draw(_spriteBatch);
+                GraphicsDevice.Clear(Color.Gray);
+
+
+                // TODO: Add your drawing code here
+
+                _spriteBatch.Begin();
+
+                //Each falling object draws itself!
+                foreach (FallingObjects o in _fallingObjects)
+                {
+                    o.Draw(_spriteBatch);
+                }
+
+                //The player will draw itself
+                _player.Draw(_spriteBatch);
+
+                //Bounding boxes
+                //_spriteBatch.Draw(_boundingBoxTexture, _player.GetBounds(), Color.Red * 0.25f);
+                // for (int i = 0; i < _fallingObjects.Count; i++)
+                // _spriteBatch.Draw(_boundingBoxTexture, _fallingObjects[i].GetBounds(), Color.Red * 0.25f);
+
+                //Document lives and score
+                _spriteBatch.DrawString(_GameFont, "Lives: " + _playerLives, new Vector2(5, 0), Color.White);
+                _spriteBatch.DrawString(_GameFont, "Candies: " + _playerScore, new Vector2(650, 0), Color.White);
+
+                _spriteBatch.End();
             }
+            else
+            {
+                GraphicsDevice.Clear(Color.Black);
 
-            //The player will draw itself
-            _player.Draw(_spriteBatch);
+                _spriteBatch.Begin();
 
-            //Bounding boxes
-            _spriteBatch.Draw(_boundingBoxTexture, _player.GetBounds(), Color.Red * 0.25f);
-            for (int i = 0; i < _fallingObjects.Count; i++)
-                _spriteBatch.Draw(_boundingBoxTexture, _fallingObjects[i].GetBounds(), Color.Red * 0.25f);
+                //Each falling object draws itself! IT SHOULD BE NONE!!!!
+                foreach (FallingObjects o in _fallingObjects)
+                {
+                    o.Draw(_spriteBatch);
+                }
 
-            //Document lives and score
-            _spriteBatch.DrawString(_GameFont, "Lives: " + _playerLives, new Vector2(5, 0), Color.White);
-            _spriteBatch.DrawString(_GameFont, "Candies: " + _playerScore, new Vector2(650, 0), Color.White);
+                //The player will draw itself
+                _player.Draw(_spriteBatch);
 
-            _spriteBatch.End();
+                //Bounding boxes
+                //_spriteBatch.Draw(_boundingBoxTexture, _player.GetBounds(), Color.Red * 0.25f);
+                // for (int i = 0; i < _fallingObjects.Count; i++)
+                // _spriteBatch.Draw(_boundingBoxTexture, _fallingObjects[i].GetBounds(), Color.Red * 0.25f);
+
+                
+                int screenCenterX = _graphics.PreferredBackBufferWidth / 2;
+                int screenCenterY = _graphics.PreferredBackBufferHeight / 2;
+
+                string gameOverText = "You died. You've collected " + _playerScore + " candies!";
+                int textHalfWidth = (int)_GameFont.MeasureString(gameOverText).X / 2;
+                int textHalfHeight = (int)_GameFont.MeasureString(gameOverText).Y / 2;
+                _spriteBatch.DrawString(_GameFont, gameOverText, new Vector2(screenCenterX - textHalfWidth, screenCenterY - textHalfHeight), Color.Red);
+
+                string gameOverText2 = "Press R to restart.";
+                int textHalfWidth2 = (int)_GameFont.MeasureString(gameOverText2).X / 2;
+                int textHalfHeight2 = (int)_GameFont.MeasureString(gameOverText2).Y / 2;
+                _spriteBatch.DrawString(_GameFont, gameOverText2, new Vector2(screenCenterX - textHalfWidth2, screenCenterY - textHalfHeight2 + 100), Color.Red);
+
+
+                _spriteBatch.End();
+            }
             base.Draw(gameTime);
         }
     }
