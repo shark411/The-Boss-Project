@@ -50,7 +50,7 @@ namespace The_Boss_Project
             {
                 _objectRotation += _objectRotationAmount;
             }
-            _objectY++;
+            _objectY ++;
         }
         public void Draw(SpriteBatch spriteBatch)
         {
