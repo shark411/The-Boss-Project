@@ -11,14 +11,24 @@ namespace The_Boss_Project
     
     internal class Candy : FallingObjects
     {
-        
         private Color _candyColor;
+        private bool _hasScored;
 
         public Candy(float x, float y, Texture2D candyTexture) : base (x, y, candyTexture)
         {
             _candyColor = new Color(128 + _rng.Next(0, 129), 128 + _rng.Next(0, 129), 128 + _rng.Next(0, 129));
+            _hasScored = false;
+        }
+        public override void Interacted()
+        {
+            _hasScored = true;
+        }
+        public bool HasScored()
+        { 
+            return _hasScored; 
         }
 
+        //Make the candy draw itself (added colour)
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_objectTexture,

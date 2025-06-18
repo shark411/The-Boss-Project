@@ -9,9 +9,22 @@ namespace The_Boss_Project
 {
     internal class Axe : FallingObjects
     {
+        private bool _hasHit;
+
         public Axe(float x, float y, Texture2D axeTexture) : base(x, y, axeTexture)
         {
             _objectSpeed = _rng.Next(2, 6);
+            _hasHit = false;
+        }
+
+        public override void Interacted()
+        {
+            _hasHit = true;
+        }
+
+        public bool HasHit()
+        {
+            return _hasHit;
         }
     }
 }

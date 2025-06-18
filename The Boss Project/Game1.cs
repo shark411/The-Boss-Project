@@ -20,6 +20,10 @@ namespace The_Boss_Project
 
         //Player
         private Player _player;
+        private int _playerLives, _playerScore;
+
+        //Font
+        private SpriteFont _GameFont;
 
         public Game1()
         {
@@ -37,6 +41,10 @@ namespace The_Boss_Project
             //For falling objects
             _fallingObjects = new List<FallingObjects>();
             _numFallingObjects = 5;
+
+            //For player
+            _playerLives = 3;
+            _playerScore = 0;
 
             base.Initialize();
         }
@@ -62,6 +70,9 @@ namespace The_Boss_Project
             //For the player
             _player = new Player(Content.Load<Texture2D>("DrKB_Front"));
 
+            //For the game font
+            _GameFont = Content.Load<SpriteFont>("GameFont");
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -81,10 +92,28 @@ namespace The_Boss_Project
             //Destroy falling objects if they need to be destroyed
             for (int i = 0; i < _fallingObjects.Count; i++)
             {
-                    if (_fallingObjects[i].GetY() > 500 || (_fallingObjects[i].GetBounds().Intersects(_player.GetBounds())))
-                    {
+                   if (_fallingObjects[i].GetY() > 500)
+                   {
+                    _fallingObjects.RemoveAt(i);
+                   }
+                   else if (_fallingObjects[i].GetBounds().Intersects(_player.GetBounds()))
+                   {
+                    _fallingObjects[i].Interacted();
+
+                       if (_fallingObjects[i].GetType() == typeof(Candy))
+                       {
+                        ((Candy)_fallingObjects[i]).HasScored();
+                        _playerScore++;
+                       }
+
+                       if (_fallingObjects[i].GetType() == typeof(Axe))
+                       {
+                        ((Axe)_fallingObjects[i]).HasHit();
+                        _playerLives--;
+                       }
+
                      _fallingObjects.RemoveAt(i);
-                    }
+                   }
             }
 
             //Fill out the list once it empties
@@ -127,8 +156,12 @@ namespace The_Boss_Project
 
             //The player will draw itself
             _player.Draw(_spriteBatch);
-            _spriteBatch.End();
 
+            //Document lives and score
+            _spriteBatch.DrawString(_GameFont, "Lives: " + _playerLives, new Vector2(5, 0), Color.White);
+            _spriteBatch.DrawString(_GameFont, "Candies: " + _playerScore, new Vector2(650, 0), Color.White);
+
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
     }

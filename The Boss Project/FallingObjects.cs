@@ -34,13 +34,24 @@ namespace The_Boss_Project
                 _rotateLeft = true;
         }
 
+        //Get the Y (for objects to despawn at a certain y)
         public float GetY() 
         { 
             return _objectY; 
         }
 
-        public Rectangle GetBounds() { return new Rectangle((int)_objectX - (int)(_objectTexture.Width) / 2, (int)_objectY - (int)(_objectTexture.Height) / 2, (int)(_objectTexture.Width), (int)(_objectTexture.Height)); }
+        //Falling object hitbox
+        public Rectangle GetBounds() 
+        { 
+            return new Rectangle((int)_objectX - (int)(_objectTexture.Width) / 2, (int)_objectY - (int)(_objectTexture.Height) / 2, (int)(_objectTexture.Width), (int)(_objectTexture.Height)); 
+        }
 
+        public virtual void Interacted()
+        {
+            //Will be used later
+        }
+
+        //Make the object update itself
         public void Update()
         {
             if (_rotateLeft)
@@ -53,6 +64,8 @@ namespace The_Boss_Project
             }
             _objectY += _objectSpeed;
         }
+
+        //Make the object draw itself
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_objectTexture,

@@ -13,8 +13,7 @@ namespace The_Boss_Project
     {
         private Texture2D _playerTexture;
         private float _playerX, _playerY, _playerSpeed;
-        private int _playerLives;
-        private bool _playerIsDead, _playerMovingRight;
+        private bool _playerMovingRight;
 
 
         public Player(Texture2D playerTexture)
@@ -22,9 +21,7 @@ namespace The_Boss_Project
             _playerTexture = playerTexture;
             _playerX = 370;
             _playerY = 380;
-            _playerSpeed = 5;
-            _playerLives = 3;
-            _playerIsDead = false;
+            _playerSpeed = 7;
             _playerMovingRight = false;
         }
 
