@@ -17,6 +17,7 @@ namespace The_Boss_Project
         private bool _rotateLeft;
         private bool _isDestroyed;
         protected float _objectSpeed;
+        
 
         public FallingObjects(float objectX, float objectY, Texture2D objectTexture)
         {
@@ -38,10 +39,6 @@ namespace The_Boss_Project
             return _objectY; 
         }
 
-        public bool IsDestroyed() 
-        { 
-            return _isDestroyed; 
-        }
         public Rectangle GetBounds() { return new Rectangle((int)_objectX - (int)(_objectTexture.Width) / 2, (int)_objectY - (int)(_objectTexture.Height) / 2, (int)(_objectTexture.Width), (int)(_objectTexture.Height)); }
 
         public void Update()

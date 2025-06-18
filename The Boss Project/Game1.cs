@@ -81,10 +81,10 @@ namespace The_Boss_Project
             //Destroy falling objects if they need to be destroyed
             for (int i = 0; i < _fallingObjects.Count; i++)
             {
-                if (_fallingObjects[i].IsDestroyed() || _fallingObjects[i].GetY() > 500)
-                {
-                    _fallingObjects.RemoveAt(i);
-                }
+                    if (_fallingObjects[i].GetY() > 500 || (_fallingObjects[i].GetBounds().Intersects(_player.GetBounds())))
+                    {
+                     _fallingObjects.RemoveAt(i);
+                    }
             }
 
             //Fill out the list once it empties
