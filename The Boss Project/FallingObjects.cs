@@ -16,7 +16,6 @@ namespace The_Boss_Project
         protected float _objectRotation;
         private float _objectRotationAmount;
         private bool _rotateLeft;
-        private bool _isDestroyed;
         protected float _objectSpeed;
         
 
@@ -28,7 +27,6 @@ namespace The_Boss_Project
             _rng = new Random();
             _objectRotation = _rng.Next(0, 101) / 100f;
             _objectRotationAmount = (_rng.Next(1, 1000) / 10000f);
-            _isDestroyed = false;
             _objectSpeed = 2f;
 
             if (_rng.Next(1, 101) < 50)

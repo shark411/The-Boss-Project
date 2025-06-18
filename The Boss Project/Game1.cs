@@ -13,6 +13,7 @@ namespace The_Boss_Project
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
         //Random Number Generator
         private Random _rng;
 
@@ -45,7 +46,6 @@ namespace The_Boss_Project
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             //Finish setting up random number generator
             _rng = new Random();
             
@@ -86,7 +86,7 @@ namespace The_Boss_Project
             }
 
             //For the player
-            _player = new Player(Content.Load<Texture2D>("DrKB_Front"));
+            _player = new Player(Content.Load<Texture2D>("DrKB_Front"), (Content.Load<Texture2D>("DrKB_ProfileL")), (Content.Load<Texture2D>("DrKB_ProfileR")));
 
             //For the game font
             _GameFont = Content.Load<SpriteFont>("GameFont");
@@ -96,16 +96,14 @@ namespace The_Boss_Project
             _Music = Content.Load<Song>("650965__betabeats__beat-tune-abysses");
             MediaPlayer.Play(_Music);
             _gameOverSFX = Content.Load<SoundEffect>("169317__scorpion67890__demonic-laugh");
-
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic here
+            
+            //While player lives, play the game
             if (_playerLives > 0)
             {
                 //Each falling object updates itself
@@ -117,12 +115,15 @@ namespace The_Boss_Project
                 //Destroy falling objects if they need to be destroyed
                 for (int i = 0; i < _fallingObjects.Count; i++)
                 {
+                  
                     if (_fallingObjects[i].GetY() > 500)
                     {
+                        //If they reach past the ground, destroy them!
                         _fallingObjects.RemoveAt(i);
                     }
                     else if (_fallingObjects[i].GetBounds().Intersects(_player.GetBounds()))
                     {
+                        //If they touch the player, do their thing!
                         _fallingObjects[i].Interacted();
 
                         if (_fallingObjects[i].GetType() == typeof(Candy))
@@ -136,7 +137,7 @@ namespace The_Boss_Project
                             ((Axe)_fallingObjects[i]).HasHit();
                             _playerLives--;
                         }
-
+                        //Then die lol
                         _fallingObjects.RemoveAt(i);
                     }
                 }
@@ -165,15 +166,16 @@ namespace The_Boss_Project
                 //For music to loop
                 MediaPlayer.IsRepeating = true;
             }
-            else
+            else //When the player dies!
             {
                 MediaPlayer.Stop(); //Stop the music when you die
                 _fallingObjects.Clear();
-                if (_isPlayingSound == false)
+                if (_isPlayingSound == false) //So the sound only plays once
                 {
                     _gameOverSFX.Play();
                 }
                 _isPlayingSound = true;
+                //The ability to restart the game!
                 if (Keyboard.GetState().IsKeyDown(Keys.R))
                 {
                     Initialize();
@@ -184,12 +186,9 @@ namespace The_Boss_Project
 
         protected override void Draw(GameTime gameTime)
         {
-            if (_playerLives > 0)
+            if (_playerLives > 0) //While the player lives!
             {
                 GraphicsDevice.Clear(Color.Gray);
-
-
-                // TODO: Add your drawing code here
 
                 _spriteBatch.Begin();
 
@@ -213,7 +212,7 @@ namespace The_Boss_Project
 
                 _spriteBatch.End();
             }
-            else
+            else //While the player is dead!
             {
                 GraphicsDevice.Clear(Color.Black);
 
@@ -225,7 +224,7 @@ namespace The_Boss_Project
                     o.Draw(_spriteBatch);
                 }
 
-                //The player will draw itself
+                //The player will draw itself. IT SHOULD BE STATIONARY!!!
                 _player.Draw(_spriteBatch);
 
                 //Bounding boxes
@@ -233,20 +232,21 @@ namespace The_Boss_Project
                 // for (int i = 0; i < _fallingObjects.Count; i++)
                 // _spriteBatch.Draw(_boundingBoxTexture, _fallingObjects[i].GetBounds(), Color.Red * 0.25f);
 
-                
+                //Calculating the center of the screen
                 int screenCenterX = _graphics.PreferredBackBufferWidth / 2;
                 int screenCenterY = _graphics.PreferredBackBufferHeight / 2;
 
+                //Tell the player how well they did
                 string gameOverText = "You died. You've collected " + _playerScore + " candies!";
                 int textHalfWidth = (int)_GameFont.MeasureString(gameOverText).X / 2;
                 int textHalfHeight = (int)_GameFont.MeasureString(gameOverText).Y / 2;
-                _spriteBatch.DrawString(_GameFont, gameOverText, new Vector2(screenCenterX - textHalfWidth, screenCenterY - textHalfHeight), Color.Red);
+                _spriteBatch.DrawString(_GameFont, gameOverText, new Vector2(screenCenterX - textHalfWidth, screenCenterY - textHalfHeight - 100), Color.Red);
 
+                //Tell the player how to restart!
                 string gameOverText2 = "Press R to restart.";
                 int textHalfWidth2 = (int)_GameFont.MeasureString(gameOverText2).X / 2;
                 int textHalfHeight2 = (int)_GameFont.MeasureString(gameOverText2).Y / 2;
                 _spriteBatch.DrawString(_GameFont, gameOverText2, new Vector2(screenCenterX - textHalfWidth2, screenCenterY - textHalfHeight2 + 100), Color.Red);
-
 
                 _spriteBatch.End();
             }
