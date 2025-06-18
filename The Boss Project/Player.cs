@@ -28,7 +28,7 @@ namespace The_Boss_Project
         //Player hitbox
         public Rectangle GetBounds() 
         {
-            return new Rectangle((int)_playerX, (int)_playerY, _playerTexture.Width, _playerTexture.Height); 
+           return new Rectangle((int)_playerX - (int)(_playerTexture.Width) / 2, (int)_playerY - (int)(_playerTexture.Height) / 2, (int)( _playerTexture.Width), (int)(_playerTexture.Height)); ; 
         }
 
         public void Update()

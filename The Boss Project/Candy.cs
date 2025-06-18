@@ -14,18 +14,28 @@ namespace The_Boss_Project
     {
         private Color _candyColor;
         private bool _hasScored;
-        SoundEffect _candyCollectSFX;
+        SoundEffect _candyCollectSFX1, _candyCollectSFX2;
 
-        public Candy(float x, float y, Texture2D candyTexture, SoundEffect candyCollectSFX) : base (x, y, candyTexture)
+        public Candy(float x, float y, Texture2D candyTexture, SoundEffect candyCollectSFX1, SoundEffect candyCollectSFX2) : base (x, y, candyTexture)
         {
             _candyColor = new Color(128 + _rng.Next(0, 129), 128 + _rng.Next(0, 129), 128 + _rng.Next(0, 129));
             _hasScored = false;
-            _candyCollectSFX = candyCollectSFX;
+            _candyCollectSFX1 = candyCollectSFX1;
+            _candyCollectSFX2 = candyCollectSFX2;
         }
         public override void Interacted()
         {
             _hasScored = true;
-            _candyCollectSFX.Play();
+            int odds = _rng.Next(1,3);
+            if (odds == 1)
+            {
+                _candyCollectSFX1.Play();
+            }
+
+            if (odds == 2)
+            {
+                _candyCollectSFX2.Play();
+            }
         }
         public bool HasScored()
         { 

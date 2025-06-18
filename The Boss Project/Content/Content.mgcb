@@ -25,6 +25,12 @@
 /processorParam:Quality=Best
 /build:650965__betabeats__beat-tune-abysses.wav
 
+#begin 762781__sess8it__bubblepopping.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:762781__sess8it__bubblepopping.mp3
+
 #begin 978__rhumphries__rbh-glass_break-02.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

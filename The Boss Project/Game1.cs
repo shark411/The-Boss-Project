@@ -30,6 +30,9 @@ namespace The_Boss_Project
         //For the music
         private Song _Music;
 
+        //Bounding box
+        private Texture2D _boundingBoxTexture;
+
 
         public Game1()
         {
@@ -52,6 +55,10 @@ namespace The_Boss_Project
             _playerLives = 3;
             _playerScore = 0;
 
+            //Bounding box
+            _boundingBoxTexture = new Texture2D(GraphicsDevice, 1, 1);
+            _boundingBoxTexture.SetData(new Color[] { Color.White });
+
             base.Initialize();
         }
 
@@ -65,7 +72,7 @@ namespace The_Boss_Project
                 int odds = _rng.Next(1, 3);
                 if (odds == 1)
                 {
-                    _fallingObjects.Add(new Candy(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Candy"), Content.Load<SoundEffect>("630502__jimbo555__soap-dispenser")));
+                    _fallingObjects.Add(new Candy(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Candy"), Content.Load<SoundEffect>("630502__jimbo555__soap-dispenser"), Content.Load<SoundEffect>("762781__sess8it__bubblepopping")));
                 }
                 else if (odds == 2)
                 {
@@ -93,64 +100,74 @@ namespace The_Boss_Project
                 Exit();
 
             // TODO: Add your update logic here
-
-            //Each falling object updates itself
-            foreach (FallingObjects o in _fallingObjects)
+            if (_playerLives > 0)
             {
-                o.Update();
-            }
-
-            //Destroy falling objects if they need to be destroyed
-            for (int i = 0; i < _fallingObjects.Count; i++)
-            {
-                   if (_fallingObjects[i].GetY() > 500)
-                   {
-                    _fallingObjects.RemoveAt(i);
-                   }
-                   else if (_fallingObjects[i].GetBounds().Intersects(_player.GetBounds()))
-                   {
-                    _fallingObjects[i].Interacted();
-
-                       if (_fallingObjects[i].GetType() == typeof(Candy))
-                       {
-                        ((Candy)_fallingObjects[i]).HasScored();
-                        _playerScore++;
-                       }
-
-                       if (_fallingObjects[i].GetType() == typeof(Axe))
-                       {
-                        ((Axe)_fallingObjects[i]).HasHit();
-                        _playerLives--;
-                       }
-
-                     _fallingObjects.RemoveAt(i);
-                   }
-            }
-
-            //Fill out the list once it empties
-            if (_fallingObjects.Count <= 0)
-            {
-                _numFallingObjects++;
-                for (int i = 0; i < _numFallingObjects; i++)
+                //Each falling object updates itself
+                foreach (FallingObjects o in _fallingObjects)
                 {
-                    int odds = _rng.Next(1, 3);
-                    if (odds == 1)
+                    o.Update();
+                }
+
+                //Destroy falling objects if they need to be destroyed
+                for (int i = 0; i < _fallingObjects.Count; i++)
+                {
+                    if (_fallingObjects[i].GetY() > 500)
                     {
-                        _fallingObjects.Add(new Candy(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Candy"), Content.Load<SoundEffect>("630502__jimbo555__soap-dispenser")));
+                        _fallingObjects.RemoveAt(i);
                     }
-                    else if (odds == 2)
+                    else if (_fallingObjects[i].GetBounds().Intersects(_player.GetBounds()))
                     {
-                        _fallingObjects.Add(new Axe(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Toothy Hammer"), Content.Load<SoundEffect>("978__rhumphries__rbh-glass_break-02")));
+                        _fallingObjects[i].Interacted();
+
+                        if (_fallingObjects[i].GetType() == typeof(Candy))
+                        {
+                            ((Candy)_fallingObjects[i]).HasScored();
+                            _playerScore++;
+                        }
+
+                        if (_fallingObjects[i].GetType() == typeof(Axe))
+                        {
+                            ((Axe)_fallingObjects[i]).HasHit();
+                            _playerLives--;
+                        }
+
+                        _fallingObjects.RemoveAt(i);
                     }
                 }
+
+                //Fill out the list once it empties
+                if (_fallingObjects.Count <= 0)
+                {
+                    _numFallingObjects++;
+                    for (int i = 0; i < _numFallingObjects; i++)
+                    {
+                        int odds = _rng.Next(1, 3);
+                        if (odds == 1)
+                        {
+                            _fallingObjects.Add(new Candy(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Candy"), Content.Load<SoundEffect>("630502__jimbo555__soap-dispenser"), Content.Load<SoundEffect>("762781__sess8it__bubblepopping")));
+                        }
+                        else if (odds == 2)
+                        {
+                            _fallingObjects.Add(new Axe(_rng.Next(0, 801), (_rng.Next(-200, -90)), Content.Load<Texture2D>("Toothy Hammer"), Content.Load<SoundEffect>("978__rhumphries__rbh-glass_break-02")));
+                        }
+                    }
+                }
+
+                //The player will update itself
+                _player.Update();
+
+                //For music to loop
+                MediaPlayer.IsRepeating = true;
             }
-
-            //The player will update itself
-            _player.Update();
-
-            //For music to loop
-            MediaPlayer.IsRepeating = true;
-
+            else
+            {
+                MediaPlayer.Stop(); //Stop the music when you die
+                _fallingObjects.Clear();
+                if (Keyboard.GetState().IsKeyDown(Keys.R))
+                {
+                    Initialize();
+                }
+            }
             base.Update(gameTime);
         }
 
@@ -170,6 +187,11 @@ namespace The_Boss_Project
 
             //The player will draw itself
             _player.Draw(_spriteBatch);
+
+            //Bounding boxes
+            _spriteBatch.Draw(_boundingBoxTexture, _player.GetBounds(), Color.Red * 0.25f);
+            for (int i = 0; i < _fallingObjects.Count; i++)
+                _spriteBatch.Draw(_boundingBoxTexture, _fallingObjects[i].GetBounds(), Color.Red * 0.25f);
 
             //Document lives and score
             _spriteBatch.DrawString(_GameFont, "Lives: " + _playerLives, new Vector2(5, 0), Color.White);
